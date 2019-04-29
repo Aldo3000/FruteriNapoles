@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "959053540454",
+    "firebase_url": "https://fruterinapoles.firebaseio.com",
+    "project_id": "fruterinapoles",
+    "storage_bucket": "fruterinapoles.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959053540454:android:1604abaf26088f42",
+        "android_client_info": {
+          "package_name": "aplicacion.android.app.betusto.fruterinapoles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959053540454-9c94afn06qqm107chqk3a5uerdjvqd9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9XP2H_EGbeLMuc7PIylJl-6kQogMRnA8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

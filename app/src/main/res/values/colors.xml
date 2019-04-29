@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#8BC34A</color>
+    <color name="colorPrimaryDark">#FFD050</color>
+    <color name="colorPrimaryLight">#DCEDC8</color>
+    <color name="colorAccent">#FFEB3B</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorIcons">#212121</color>
+    <color name="white">#FFFFFF</color>
+    <color name="signupColor">#77dd77</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="red">#bcf15050</color>
+    <color name="red_dark">#d43c3c</color>
+    <color name="yellow">#cfeed45a</color>
+    <color name="yellow_dark">#d4bb46</color>
+    <color name="lime">#c6bce24a</color>
+    <color name="lime_dark">#9dbf35</color>
+    <color name="green">#c648d26b</color>
+    <color name="green_dark">#36b957</color>
+    <color name="blue">#48DFE1</color>
+    <color name="blue_dark">#37c4c6</color>
+    <color name="darkblue">#5A9CEE</color>
+    <color name="darkblue_dark">#417eca</color>
+    <color name="darkviolet">#c57e50f1</color>
+    <color name="darkviolet_dark">#683dd4</color>
+    <color name="violet">#c6d65aee</color>
+    <color name="violet_dark">#b33ec9</color>
+    <color name="colorButtonRed">#801E2E</color>
+    <color name="yellow_yes">#ffff00</color>
+
+    <color name="gray">#9c9c9c</color>
+</resources>
