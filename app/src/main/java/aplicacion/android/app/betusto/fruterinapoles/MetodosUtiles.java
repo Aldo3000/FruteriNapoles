@@ -358,6 +358,19 @@ class BaseDeDatos{
         Entrada.child(ID).setValue(g);
     }
 
+    public void AlAñadirSalida(String NombreDelProducto, String CantidadProducto, String FechaSalida){
+        //clearData(); //limpiar textviews
+        String ID = GenerarTimeStamp(); //ID unico basado en el tiempo en el que se consiguió
+        //String FechaEntrada = MetodosUtiles.fechaHora(new Date().getTime()); //Fecha actual
+        //Referencia para la BD de forma en que podamos meter una tabla dentro de ella
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        //Referencia a la tabla del child:
+        DatabaseReference Salidas = database.child("Salidas");
+        //Guardamos los campos
+        GettersDeSalidas g = new GettersDeSalidas(ID, NombreDelProducto, FechaSalida, CantidadProducto);
+        Salidas.child(ID).setValue(g);
+    }
+
     //Metodo encargado de generar una ficha unica para basada en el tiempo
     public String GenerarTimeStamp(){
         Date date= new Date();

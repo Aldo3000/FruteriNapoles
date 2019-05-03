@@ -1,6 +1,8 @@
 package aplicacion.android.app.betusto.fruterinapoles;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 public class Activity_Entrada extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -34,14 +38,19 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
     private int CambioRojo = 0, CambioAmarillo = 0, CambioVerde = 0;
     MetodosUtiles MU = new MetodosUtiles();
     BaseDeDatos BD = new BaseDeDatos();
+    private DatabaseReference Database;
+    SharedPreferences sharedPreferences;
+    VariablesEstaticas VE = new VariablesEstaticas();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__entrada);
 
+
+
         Spinner spinner = findViewById(R.id.spinner1);
-        Spinner spinner1 = findViewById(R.id.spinner2);
         fecha = findViewById(R.id.activity__entrada_fechabutton);
         fechaText = findViewById(R.id.activity__entrada_fechatext);
         agregar = findViewById(R.id.activity__entrada_agregar_button);
@@ -53,6 +62,13 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 android.R.layout.simple_dropdown_item_1line, SPINNER_DATA);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+        //Persistencia de datos y referencia
+        Database = FirebaseDatabase.getInstance().getReference();
+        Database.keepSynced(true);
+        //Persistencia de variables
+        sharedPreferences= getSharedPreferences(VariablesEstaticas.SHARED_PREFS, Context.MODE_PRIVATE);
+        VE.CargarDatos(sharedPreferences);
 
         gradoRojo.setAlpha(.5f);
         gradoVerde.setAlpha(.5f);
@@ -87,6 +103,9 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 if(Fecha == null){
                     MU.MostrarToast(Activity_Entrada.this, "Escoja una fecha");
                     detectorErrores=1;
+                }else if(Fecha.isEmpty()){
+                    MU.MostrarToast(Activity_Entrada.this, "Escoja una fecha");
+                    detectorErrores=1;
                 }
                 if(Madurez == null){
                     MU.MostrarToast(Activity_Entrada.this, "Escoja un grado de madurez");
@@ -99,6 +118,15 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 if(detectorErrores==0){
                     BD.AlAñadirEntrada(Producto, Madurez, Cantidad, Fecha);
                     MU.MostrarToast(Activity_Entrada.this, "Entrada guardada");
+                    Activity_Entrada.this.finish();
+                    Intent reebot = new Intent(Activity_Entrada.this, Activity_Entrada.class);
+                    //Engañar al usuario, no pude encontrar una mejor solucion, el recycler no se actualiza
+                    //hasta que se cambie de activity
+                    //VINCULO
+                    //Quitar animaciones
+                    Activity_Entrada.this.overridePendingTransition(0, 0);
+                    Activity_Entrada.this.startActivity(reebot);
+                    Activity_Entrada.this.overridePendingTransition(0, 0);
                 }
             }
         });
@@ -166,7 +194,6 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Producto = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), Producto, Toast.LENGTH_SHORT).show();
     }
 
     @Override

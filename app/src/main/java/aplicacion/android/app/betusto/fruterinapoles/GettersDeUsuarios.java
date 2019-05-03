@@ -39,3 +39,21 @@ class GettersDeEntradas{
         this.CantidadProducto = CantidadProducto;
     }
 }
+
+class GettersDeSalidas{
+    public  String Timestamp;
+    public String NombreProducto;
+    public String FechaSalida;
+    //public String FechaMerma;
+    public String CantidadProducto;
+
+    public GettersDeSalidas(){}
+
+    public GettersDeSalidas(String Timestamp, String NombreProducto, String FechaSalida/*, String FechaMerma*/, String CantidadProducto){
+        this.Timestamp = Timestamp;
+        this.NombreProducto = NombreProducto;
+        this.FechaSalida = FechaSalida;
+        //this.FechaMerma = FechaMerma;
+        this.CantidadProducto = CantidadProducto;
+    }
+}

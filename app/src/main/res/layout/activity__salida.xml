@@ -7,6 +7,37 @@
     android:background="@drawable/entradas"
     tools:context=".Activity_Salida">
 
+    <Spinner
+        android:id="@+id/activity__salida_spinner"
+        android:layout_width="308dp"
+        android:layout_height="47dp"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginBottom="144dp"
+        android:hint="ej. Cebolla, limon..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView12"
+        app:layout_constraintTop_toBottomOf="@+id/imageView12"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <Spinner
+        android:id="@+id/activity__salida_spinner2"
+        android:layout_width="308dp"
+        android:layout_height="47dp"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginBottom="144dp"
+        android:hint="ej. Cebolla, limon..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView12"
+        app:layout_constraintTop_toBottomOf="@+id/imageView12"
+        app:layout_constraintVertical_bias="0.31" />
+
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="wrap_content"
@@ -55,21 +86,6 @@
         app:layout_constraintVertical_bias="0.283"
         app:srcCompat="@drawable/seleccionaunproducto" />
 
-    <ImageView
-        android:id="@+id/imageView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.181"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45"
-        app:srcCompat="@drawable/seleccionaunasalida" />
 
     <ImageView
         android:id="@+id/imageView14"
@@ -81,14 +97,25 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.161"
+        app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.644"
+        app:layout_constraintVertical_bias="0.714"
         app:srcCompat="@drawable/seleccionaunacantidadsalida" />
 
+    <TextView
+        android:id="@+id/activity__salida_cantidadentradatext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/imageView14"
+        app:layout_constraintEnd_toEndOf="@+id/imageView14" />
+
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/activity__salida_retirarbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -103,7 +130,7 @@
         app:layout_constraintVertical_bias="0.983" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/activity__salida_edittext"
         android:layout_width="303dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -112,12 +139,13 @@
         android:background="@drawable/entradax"
         android:ems="10"
         android:hint="ej. 25 "
-        android:inputType="textPersonName"
+        android:inputType="numberDecimal"
         android:paddingLeft="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView14"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/imageView14"
         app:layout_constraintTop_toBottomOf="@+id/imageView14"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.145" />
+
 </android.support.constraint.ConstraintLayout>
