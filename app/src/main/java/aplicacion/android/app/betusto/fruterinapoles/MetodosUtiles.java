@@ -67,6 +67,37 @@ public class MetodosUtiles {
         return filter;
     }
 
+    //Clase encargada de que los edittexts puedan tener diferentes rangos de valores
+    public static class InputFilterMinMax implements InputFilter {
+        private int min, max;
+
+        public InputFilterMinMax(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+
+        public InputFilterMinMax(String min, String max) {
+            this.min = Integer.parseInt(min);
+            this.max = Integer.parseInt(max);
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            try {
+                int input = Integer.parseInt(dest.toString() + source.toString());
+                if (isInRange(min, max, input))
+                    return null;
+            } catch (NumberFormatException nfe) { }
+            return "";
+        }
+
+        private boolean isInRange(int a, int b, int c) {
+            return b > a ? c >= a && c <= b : c >= b && c <= a;
+        }
+    }
+
+
+
     //Metodo para subrayar un textview por medio segundo
     public void Subrayar(final TextView text){
         Handler handler = new Handler();
@@ -358,17 +389,20 @@ class BaseDeDatos{
         Entrada.child(ID).setValue(g);
     }
 
-    public void AlAñadirSalida(String NombreDelProducto, String CantidadProducto, String FechaSalida){
-        //clearData(); //limpiar textviews
-        String ID = GenerarTimeStamp(); //ID unico basado en el tiempo en el que se consiguió
-        //String FechaEntrada = MetodosUtiles.fechaHora(new Date().getTime()); //Fecha actual
+    public int AlRetirarProducto(String Estampa, String CantidadDeLaEntrada, String CantidadEscrita){
+        int CantidadDeLaEntradaInt = Integer.parseInt(CantidadDeLaEntrada);
+        int CantidadEscritaInt = Integer.parseInt(CantidadEscrita);
+        int Resta = CantidadDeLaEntradaInt - CantidadEscritaInt;
         //Referencia para la BD de forma en que podamos meter una tabla dentro de ella
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         //Referencia a la tabla del child:
-        DatabaseReference Salidas = database.child("Salidas");
-        //Guardamos los campos
-        GettersDeSalidas g = new GettersDeSalidas(ID, NombreDelProducto, FechaSalida, CantidadProducto);
-        Salidas.child(ID).setValue(g);
+        DatabaseReference Entrada = database.child("Entradas");
+        if(Resta <= 0){
+            Entrada.child(Estampa).removeValue();
+        }else{
+            Entrada.child(Estampa).child("CantidadProducto").setValue(Resta);
+        }
+        return Resta;
     }
 
     //Metodo encargado de generar una ficha unica para basada en el tiempo

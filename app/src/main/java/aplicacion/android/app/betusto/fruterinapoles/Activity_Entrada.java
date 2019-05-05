@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -194,6 +195,111 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Producto = parent.getItemAtPosition(position).toString();
+        //Limitar numeros
+        int valorEscrito;
+        if(!cantidad.getText().toString().trim().equals("")){
+            valorEscrito = Integer.parseInt(cantidad.getText().toString().trim());
+        }else{
+            valorEscrito = 0;
+        }
+        switch(Producto){
+            case "Cebolla Blanca Primera":
+                if(valorEscrito > 8){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
+                break;
+            case "Cebolla Blanca Segunda":
+                if(valorEscrito > 20){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
+                break;
+            case "Cebolla Amarilla":
+                if(valorEscrito > 20){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
+                break;
+            case "Limon":
+                if(valorEscrito > 20){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
+                break;
+            case "Jalapeno":
+                if(valorEscrito > 8){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
+                break;
+            case "Papa":
+                if(valorEscrito > 12){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "12")});
+                break;
+            case "Aguacate":
+                if(valorEscrito > 8){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
+                break;
+            case "Tomate":
+                if(valorEscrito > 20){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
+                break;
+            case "Cilantro":
+                if(valorEscrito > 7){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "7")});
+                break;
+            case "Lechuga":
+                if(valorEscrito > 3){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "3")});
+                break;
+            case "Papa Galeana":
+                if(valorEscrito > 16){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "16")});
+                break;
+            case "Mango":
+                if(valorEscrito > 60){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
+                break;
+            case "Platano":
+                if(valorEscrito > 60){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
+                break;
+            case "Manzana":
+                if(valorEscrito > 60){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
+                break;
+            case "Chile Japones":
+                if(valorEscrito > 5){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "5")});
+                break;
+            case "Chile de Arbol":
+                if(valorEscrito > 60){
+                    cantidad.setText("");
+                }
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
+                break;
+        }
     }
 
     @Override
