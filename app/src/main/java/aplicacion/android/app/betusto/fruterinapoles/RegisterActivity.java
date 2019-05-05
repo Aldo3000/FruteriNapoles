@@ -247,7 +247,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         CantidadDeSnapshots.clear();
                                         Progress.dismiss();
                                         noMasDataChanges = true;
-                                        logearUsuarioParaBD(VariablesEstaticas.UID);
+                                        logearUsuarioParaBD(VE.UID);
                                     }else{
                                         if(noMasDataChanges == false) {
                                             CantidadDeSnapshots.clear();
@@ -277,7 +277,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     }else{
                     Progress.dismiss();
-                    logearUsuarioParaBD(VariablesEstaticas.UID);
+                    logearUsuarioParaBD(VE.UID);
                 }
             }
 

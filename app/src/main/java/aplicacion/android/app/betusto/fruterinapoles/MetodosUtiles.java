@@ -292,7 +292,7 @@ class VariablesEstaticas extends  android.app.Application{
     public static boolean isLoged = false; //VARIABLE QUE DEBE GUARDARSE HASTA CUANDO SE CIERRA LA APP
     //Listas para guardar los valores temporales para luego ser almacenadas a la base de datos y al auth cuando vuelva internet
     //static para que su valor se guarde, y final para que la lista no cambie, lo que contiene si puede cambiar
-    public static String UID = UUID.randomUUID().toString().replace("-", ""); //Generador
+    public String UID = UUID.randomUUID().toString().replace("-", ""); //Generador
     //Variable estatica que tomará un control del uid que se vaya a guardar en la base de datos local
     public static boolean Locked = false;
 
