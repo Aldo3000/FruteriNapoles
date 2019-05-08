@@ -228,22 +228,22 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
                 break;
             case "Jalapeno":
-                if(valorEscrito > 8){
+                if(valorEscrito > 248){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "248")});
                 break;
             case "Papa":
-                if(valorEscrito > 12){
+                if(valorEscrito > 15){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "12")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "15")});
                 break;
             case "Aguacate":
-                if(valorEscrito > 8){
+                if(valorEscrito > 10){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "10")});
                 break;
             case "Tomate":
                 if(valorEscrito > 20){
@@ -258,10 +258,10 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "7")});
                 break;
             case "Lechuga":
-                if(valorEscrito > 3){
+                if(valorEscrito > 72){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "3")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "72")});
                 break;
             case "Papa Galeana":
                 if(valorEscrito > 16){
@@ -288,16 +288,16 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
                 break;
             case "Chile Japones":
-                if(valorEscrito > 5){
+                if(valorEscrito > 6){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "5")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "6")});
                 break;
             case "Chile de Arbol":
-                if(valorEscrito > 60){
+                if(valorEscrito > 20){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
                 break;
         }
     }
