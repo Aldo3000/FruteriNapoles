@@ -87,6 +87,7 @@ public class Activity_Inventario extends AppCompatActivity {
     private List ChileJaponesListColors = new ArrayList();
     int chilejaponeslist = 0;
 
+    ArrayList<Integer> colorsss = new ArrayList<Integer>();
     SharedPreferences sharedPreferences;
     VariablesEstaticas VE = new VariablesEstaticas();
 
@@ -119,7 +120,7 @@ public class Activity_Inventario extends AppCompatActivity {
         /*ArrayList NoOfEmp = new ArrayList();
         NoOfEmp.add(new Entry(945, 0));
         NoOfEmp.add(new Entry(1040, 1));
-        /*NoOfEmp.add(new Entry(1133f, 2));
+        NoOfEmp.add(new Entry(1133f, 2));
         NoOfEmp.add(new Entry(1240f, 3));
         NoOfEmp.add(new Entry(1369f, 4));
         NoOfEmp.add(new Entry(1487f, 5));
@@ -132,7 +133,7 @@ public class Activity_Inventario extends AppCompatActivity {
         pieChart1.setDescription("Cebolla");
         year.add("");
         year.add("Stock");
-        /*year.add("2010");
+        year.add("2010");
         year.add("2011");
         year.add("2012");
         year.add("2013");
@@ -144,6 +145,67 @@ public class Activity_Inventario extends AppCompatActivity {
         pieChart1.setData(data);
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         pieChart1.animateXY(1000, 1000);*/
+        ArrayList NoOfEmp = new ArrayList();
+        NoOfEmp.add(new Entry(1, 0));
+        PieDataSet dataSet = new PieDataSet(NoOfEmp, "");
+        ArrayList year = new ArrayList();
+        year.add("Disp.");
+        pieChart1.setDescription("Cebolla Blanca. Prim.");
+        pieChart2.setDescription("Cebolla Blanca. Seg.");
+        pieChart3.setDescription("Cebolla Blanca Amarilla");
+        pieChart5.setDescription("Jalapeño Kilos");
+        pieChart4.setDescription("Limon. Bulto.");
+        pieChart6.setDescription("Papa Bulto.");
+        pieChart7.setDescription("Aguacate Caja");
+        pieChart8.setDescription("Tomate Caja");
+        pieChart9.setDescription("Cilantro Caja");
+        pieChart10.setDescription("Lechuga Piezas");
+        pieChart11.setDescription("Galeana Bulto");
+        pieChart12.setDescription("Mango. Kilos.");
+        pieChart13.setDescription("Plátano. Kilos.");
+        pieChart14.setDescription("Manzana. Kilos.");
+        pieChart15.setDescription("Chile Japonés. Kilos.");
+        pieChart16.setDescription("Chile Árbol. Kilos.");
+        PieData data = new PieData(year, dataSet);
+        pieChart1.setData(data);
+        pieChart2.setData(data);
+        pieChart3.setData(data);
+        pieChart4.setData(data);
+        pieChart5.setData(data);
+        pieChart6.setData(data);
+        pieChart7.setData(data);
+        pieChart8.setData(data);
+        pieChart9.setData(data);
+        pieChart10.setData(data);
+        pieChart11.setData(data);
+        pieChart12.setData(data);
+        pieChart13.setData(data);
+        pieChart14.setData(data);
+        pieChart15.setData(data);
+        pieChart16.setData(data);
+
+        colorsss.add(Color.rgb(190, 190, 190));
+        dataSet.setColors(colorsss);
+        pieChart1.animateXY(1000, 1000);
+        pieChart2.animateXY(1000, 1000);
+        pieChart3.animateXY(1000, 1000);
+        pieChart4.animateXY(1000, 1000);
+        pieChart5.animateXY(1000, 1000);
+        pieChart6.animateXY(1000, 1000);
+        pieChart7.animateXY(1000, 1000);
+        pieChart8.animateXY(1000, 1000);
+        pieChart9.animateXY(1000, 1000);
+        pieChart10.animateXY(1000, 1000);
+
+        pieChart11.animateXY(1000, 1000);
+        pieChart12.animateXY(1000, 1000);
+        pieChart13.animateXY(1000, 1000);
+        pieChart14.animateXY(1000, 1000);
+        pieChart15.animateXY(1000, 1000);
+        pieChart16.animateXY(1000, 1000);
+
+
+
         LecturaBaseDeDatos();
     }
 
