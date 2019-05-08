@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +38,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -199,6 +202,8 @@ public class MetodosUtiles {
                 // fechaInicioText.setText("Fecha de inicio:\n"+fecha); //Escribe la fecha
             }
         }, año, mes, dia);
+        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + 1000); //Evitar que el usuario escoja una fecha nueva al dia actual
+        //Para que no puedas escoger dias atras es setMin, y -1000
         datePickerDialog.show();
     }
 
@@ -385,9 +390,23 @@ class BaseDeDatos{
         //Referencia a la tabla del child:
         DatabaseReference Entrada = database.child("Entradas");
         //Guardamos los campos
-        GettersDeEntradas g = new GettersDeEntradas(ID, NombreDelProducto, GradoMadurez, FechaEntrada, CantidadProducto);
+        GettersDeEntradas g = new GettersDeEntradas(ID, NombreDelProducto, GradoMadurez, FechaEntrada, CantidadProducto, GradoMadurez);
         Entrada.child(ID).setValue(g);
     }
+
+    public void AlAñadirMerma(String NombreDelProducto, /*String GradoMadurez,*/ String CantidadProducto, String FechaEntrada){
+        //clearData(); //limpiar textviews
+        String ID = GenerarTimeStamp(); //ID unico basado en el tiempo en el que se consiguió
+        String FechaMerma = MetodosUtiles.fechaHora(new Date().getTime()); //Fecha actual
+        //Referencia para la BD de forma en que podamos meter una tabla dentro de ella
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        //Referencia a la tabla del child:
+        DatabaseReference Merma = database.child("Mermas");
+        //Guardamos los campos
+        GettersDeMerma g = new GettersDeMerma(ID, NombreDelProducto, FechaEntrada, FechaMerma, CantidadProducto);
+        Merma.child(ID).setValue(g);
+    }
+
 
     public int AlRetirarProducto(String Estampa, String CantidadDeLaEntrada, String CantidadEscrita){
         int CantidadDeLaEntradaInt = Integer.parseInt(CantidadDeLaEntrada);
@@ -403,6 +422,145 @@ class BaseDeDatos{
             Entrada.child(Estampa).child("CantidadProducto").setValue(Resta);
         }
         return Resta;
+    }
+
+    public boolean Revisando = false;
+    //Metodo encargado de cambiar el color de los grados de madurez automáticamente
+    public void RevisarFechasMerma(final Context contexto){
+        Revisando=true; //Variable que nos ayudara a que este metodo no se vuelva a ejecutar si hay un problema de internet o si va muy lento
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        //Referencia a la tabla del child:
+        final DatabaseReference entradas = database.child("Entradas");
+        entradas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) //Recorremos cada campo de la tabla Entradas
+                {
+                    if(snapshot.getValue() != null) {
+                            entradas.child(snapshot.getKey()).child("FechaEntrada").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        //Conseguimos la fecha de la base de datos
+                                        String Fecha = snapshot.child("FechaEntrada").getValue().toString();
+                                        String fromDate = Fecha;
+                                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                                        Date dtt = null;
+                                        try {
+                                            dtt = df.parse(fromDate); //La fecha esta en string, aqui la pasamos a date
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        Date ds = new Date(dtt.getTime());
+                                        Calendar calendar = Calendar.getInstance();
+                                        calendar.setTime(ds); // Configuramos la fecha que se recibe
+                                        //calendar.add(Calendar.DAY_OF_YEAR, 7);  // numero de días a añadir, o restar en caso de días<0
+                                        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+                                        String formatted = format1.format(calendar.getTime()); //Fecha con los dias añadidos o restados
+                                        String fechaActual = format1.format(new Date()); //Fecha actual dd/MM/yyyy
+                                        //Restar fechas
+                                        try {
+                                            Date date1 = format1.parse(formatted);
+                                            Date date2 = format1.parse(fechaActual);
+                                            long diff = date2.getTime() - date1.getTime();
+                                            String timestamp = snapshot.child("Timestamp").getValue().toString();
+                                            Log.e("Test", "Timestamp: "+timestamp+" "+TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+                                            +" Original: "+snapshot.child("GradoMadurezOriginal").getValue().toString() + " Actual: "+
+                                                    snapshot.child("GradoMadurez").getValue().toString());
+                                            switch (snapshot.child("GradoMadurezOriginal").getValue().toString()){
+                                                /*TODO:Crear un "GradoMadurezOriginal" en la base de datos para poder guiar mejor
+                                                * al cambiar valores o eliminar timestamp
+                                                * TODO: Ver eso que dice aldo sobre registrar entradas, que no te deje despues de cierto numero que
+                                                * cuente dentro de la base datos
+                                                * TODO: Este metodo se debe llamar cada 10 segundos, ponerlo en todos los activities
+                                                * TODO: Agregar a este metodo lo relacionado a la merma, incluyendo lo del CSV
+                                                * TODO: El CSV se genera solo si la merma automatica o manual es llamada
+                                                * TODO: Aldo pase salidas ya puesto bonito
+                                                * */
+                                                //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
+                                                case "Green":
+                                                    if(snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                        if (snapshot.child("GradoMadurez").getValue().toString().equals("Green")) {
+                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 18) {
+                                                                entradas.child(timestamp).child("GradoMadurez").setValue("Yellow");
+                                                            }
+                                                        } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Yellow")) {
+                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 24) {
+                                                                entradas.child(timestamp).child("GradoMadurez").setValue("Red");
+                                                            }
+                                                        } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
+                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 30) {
+                                                                entradas.child(timestamp).removeValue();
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                                //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
+                                                case "Yellow":
+                                                    if(snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                        if (snapshot.child("GradoMadurez").getValue().toString().equals("Yellow")) {
+                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 6) {
+                                                                entradas.child(timestamp).child("GradoMadurez").setValue("Red");
+                                                            }
+                                                        } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
+                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 12) {
+                                                                entradas.child(timestamp).removeValue();
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                                //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
+                                                case "Red":
+                                                    if(snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                        //Si los dias de diferencia son mayores a 30 se cambia el grado
+                                                        if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
+                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 6) {
+                                                                entradas.child(timestamp).removeValue();
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                            }
+                                            if(snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                Log.e("Test", "DESPUES TERMINAR EL SWITCH: Timestamp: " + timestamp + " " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+                                                        + " Original: " + snapshot.child("GradoMadurezOriginal").getValue().toString() + " Actual: " +
+                                                        snapshot.child("GradoMadurez").getValue().toString()+"\n");
+                                            }
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                     @Override
+                                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                }
+                        );
+                    }
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //Variables para revisar la merma y grados de madurez
+    Handler h = new Handler();
+    Runnable runnable;
+    public void RevisarCada15SegundosEstadoGrados(final Context context){
+        h.postDelayed( runnable = new Runnable() {
+            public void run() {
+                if(!Revisando) {
+                    RevisarFechasMerma(context);
+                }
+                h.postDelayed(runnable, 15000);
+            }
+        }, 15000);
+    }
+
+    public void DetenerContadorMerma(){
+        h.removeCallbacks(runnable);
     }
 
     //Metodo encargado de generar una ficha unica para basada en el tiempo

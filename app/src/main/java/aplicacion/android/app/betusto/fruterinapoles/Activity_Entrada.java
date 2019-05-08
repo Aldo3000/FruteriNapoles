@@ -228,22 +228,22 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
                 break;
             case "Jalapeno":
-                if(valorEscrito > 248){
+                if(valorEscrito > 8){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "248")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
                 break;
             case "Papa":
-                if(valorEscrito > 15){
+                if(valorEscrito > 12){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "15")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "12")});
                 break;
             case "Aguacate":
-                if(valorEscrito > 10){
+                if(valorEscrito > 8){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "10")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "8")});
                 break;
             case "Tomate":
                 if(valorEscrito > 20){
@@ -258,10 +258,10 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "7")});
                 break;
             case "Lechuga":
-                if(valorEscrito > 72){
+                if(valorEscrito > 3){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "72")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "3")});
                 break;
             case "Papa Galeana":
                 if(valorEscrito > 16){
@@ -288,16 +288,16 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
                 cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
                 break;
             case "Chile Japones":
-                if(valorEscrito > 6){
+                if(valorEscrito > 5){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "6")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "5")});
                 break;
             case "Chile de Arbol":
-                if(valorEscrito > 20){
+                if(valorEscrito > 60){
                     cantidad.setText("");
                 }
-                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "20")});
+                cantidad.setFilters(new InputFilter[]{new MetodosUtiles.InputFilterMinMax("1", "60")});
                 break;
         }
     }
@@ -305,5 +305,22 @@ public class Activity_Entrada extends AppCompatActivity implements AdapterView.O
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    //Revisar conexion internet
+    @Override
+    protected void onResume() {
+        //Metodo para revisar merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.RevisarCada15SegundosEstadoGrados(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        //Detener deteccion de merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.DetenerContadorMerma();
+        super.onPause();
     }
 }

@@ -27,33 +27,36 @@ class GettersDeEntradas{
     public String FechaEntrada;
     //public String FechaMerma;
     public String CantidadProducto;
+    public String GradoMadurezOriginal;
 
     public GettersDeEntradas(){}
 
-    public GettersDeEntradas(String Timestamp, String NombreProducto, String GradoMadurez, String FechaEntrada/*, String FechaMerma*/, String CantidadProducto){
+    public GettersDeEntradas(String Timestamp, String NombreProducto, String GradoMadurez, String FechaEntrada/*, String FechaMerma*/, String CantidadProducto,
+    String GradoMadurezOriginal){
         this.Timestamp = Timestamp;
         this.NombreProducto = NombreProducto;
         this.GradoMadurez = GradoMadurez;
         this.FechaEntrada = FechaEntrada;
         //this.FechaMerma = FechaMerma;
         this.CantidadProducto = CantidadProducto;
+        this.GradoMadurezOriginal = GradoMadurezOriginal;
     }
 }
 
-class GettersDeSalidas{
+class GettersDeMerma{
     public  String Timestamp;
     public String NombreProducto;
-    public String FechaSalida;
-    //public String FechaMerma;
-    public String CantidadProducto;
+    public String FechaDeEntradaDelProducto;
+    public String FechaMerma;
+    public String CantidadDelProducto;
 
-    public GettersDeSalidas(){}
+    public GettersDeMerma(){}
 
-    public GettersDeSalidas(String Timestamp, String NombreProducto, String FechaSalida/*, String FechaMerma*/, String CantidadProducto){
+    public GettersDeMerma(String Timestamp, String NombreProducto, String FechaDeEntradaDelProducto, String FechaMerma, String CantidadDelProducto){
         this.Timestamp = Timestamp;
         this.NombreProducto = NombreProducto;
-        this.FechaSalida = FechaSalida;
-        //this.FechaMerma = FechaMerma;
-        this.CantidadProducto = CantidadProducto;
+        this.FechaDeEntradaDelProducto = FechaDeEntradaDelProducto;
+        this.FechaMerma = FechaMerma;
+        this.CantidadDelProducto = CantidadDelProducto;
     }
 }

@@ -1,11 +1,14 @@
 package aplicacion.android.app.betusto.fruterinapoles;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,12 +25,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 
 public class MainMenu extends AppCompatActivity {
     //Los OnDataChange se efectuan solo al final del codigo
 
 
-    private Button SackButton, GastoButton, ViajeButton, NotasButton;
+    MetodosUtiles MU = new MetodosUtiles();
     private ImageButton OpcionesButton;
     private TextView usuarioBienvenidoText;
     private DatabaseReference Database;
@@ -170,6 +183,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
 
+
     public void Saludos(){
         Database.child(VariablesEstaticas.CurrentUserUID).addValueEventListener(new ValueEventListener() {
 
@@ -203,6 +217,9 @@ public class MainMenu extends AppCompatActivity {
         //vuelve visible o invisible el boton
         DetectaConexion CD = new DetectaConexion(this);
         CD.ConexionPorSegundos(nowifibutton);
+        //Metodo para revisar merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.RevisarCada15SegundosEstadoGrados(this);
         super.onResume();
     }
 
@@ -211,6 +228,9 @@ public class MainMenu extends AppCompatActivity {
     protected void onPause() {
         DetectaConexion CD = new DetectaConexion(this);
         CD.DetenerContador();
+        //Detener deteccion de merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.DetenerContadorMerma();
         super.onPause();
     }
 

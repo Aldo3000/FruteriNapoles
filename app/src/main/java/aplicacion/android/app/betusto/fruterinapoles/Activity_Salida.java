@@ -324,4 +324,20 @@ public class Activity_Salida extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    //Revisar conexion internet
+    @Override
+    protected void onResume() {
+        //Metodo para revisar merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.RevisarCada15SegundosEstadoGrados(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.DetenerContadorMerma();
+        super.onPause();
+    }
 }

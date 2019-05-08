@@ -271,6 +271,9 @@ public class UsuarioActivity extends AppCompatActivity {
         //vuelve visible o invisible el boton
         DetectaConexion CD = new DetectaConexion(this);
         CD.ConexionPorSegundos(nowifibutton);
+        //Metodo para revisar merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.RevisarCada15SegundosEstadoGrados(this);
         super.onResume();
     }
 
@@ -279,6 +282,9 @@ public class UsuarioActivity extends AppCompatActivity {
     protected void onPause() {
         DetectaConexion CD = new DetectaConexion(this);
         CD.DetenerContador();
+        //Detener deteccion de merma y grado de madurez
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.DetenerContadorMerma();
         super.onPause();
     }
 }
