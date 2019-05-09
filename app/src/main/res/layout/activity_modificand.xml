@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fragmentprincipal"
     tools:context=".ModificandoActivity">
 
     <ImageButton
@@ -20,18 +21,7 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="109dp" />
 
-    <TextView
-        android:id="@+id/activity_modificando_olvidepassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="539dp"
-        android:clickable="true"
-        android:text="Olvidé mi contraseña"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp" />
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -69,7 +59,9 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
     </android.support.v4.view.ViewPager>
 

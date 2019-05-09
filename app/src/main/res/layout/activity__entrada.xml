@@ -220,7 +220,7 @@
         android:id="@+id/activity__entrada_fechabutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Escoger fecha"
+        android:background="@drawable/botonfechaescoger"
         app:layout_constraintStart_toStartOf="@+id/imageView8"
         app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 

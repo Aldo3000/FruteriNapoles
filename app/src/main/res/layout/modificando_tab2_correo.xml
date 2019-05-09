@@ -29,6 +29,8 @@
         android:layout_marginTop="370dp"
         android:ems="10"
         android:hint="Contraseña"
+        android:background="@drawable/entradax"
+        android:paddingLeft="10dp"
         android:inputType="textPassword" />
 
     <ImageButton
@@ -56,6 +58,8 @@
         android:layout_marginTop="253dp"
         android:ems="10"
         android:hint="Nuevo correo"
+        android:background="@drawable/entradax"
+        android:paddingLeft="10dp"
         android:inputType="textEmailAddress" />
 
     <TextView
@@ -91,13 +95,13 @@
 
     <Button
         android:id="@+id/activity_modificando_tab2_cambiarcorreobutton"
-        android:layout_width="155dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="445dp"
-        android:text="Cambiar \ncorreo"
+        android:background="@drawable/botoncambiarcorreoelectronico"
         android:textAllCaps="true"
         android:textSize="14sp" />
 
