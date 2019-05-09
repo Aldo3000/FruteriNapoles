@@ -53,7 +53,7 @@ public class ModificandoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificand);
-        OlvideContraseña = findViewById(R.id.activity_modificando_olvidepassword);
+      
         nowifibutton = findViewById(R.id.activity_modficando_nowifibutton);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
