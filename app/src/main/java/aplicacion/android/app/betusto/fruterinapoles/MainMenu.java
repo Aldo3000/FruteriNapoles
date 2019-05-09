@@ -1,14 +1,19 @@
 package aplicacion.android.app.betusto.fruterinapoles;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,14 +29,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +60,6 @@ public class MainMenu extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     VariablesEstaticas VE = new VariablesEstaticas();
     public static final String FINISH_ALERT = "finish_alert"; //Variable para terminar este activity desde otro
-
     RelativeLayout rellay_inventario, rellay_merma, rellay_entradas, rellay_salidas, rellay_ajustes, rellay_acerca;
 
     @Override
@@ -74,20 +84,17 @@ public class MainMenu extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(VariablesEstaticas.SHARED_PREFS, Context.MODE_PRIVATE);
         VE.CargarDatos(sharedPreferences); //Escencial para que no valgan nulos los valores de isLogged y UID
 
-        nowifibutton.setOnClickListener(new View.OnClickListener(){
+        nowifibutton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 CD.mensajeNoInternet(MainMenu.this);
             }
         });
 
-        /*SackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent yatemgocuenta = new Intent(MainMenu.this, IngresarActivity.class);
-                startActivity(yatemgocuenta);
-            }
-        });*/
+        //Al entrar por primera vez al mainmenu se pedira el permiso
+        ActivityCompat.requestPermissions(MainMenu.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                1);
 
         rellay_inventario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,17 +181,19 @@ public class MainMenu extends AppCompatActivity {
         super.onStart();
         Intent mainmenu = getIntent();
         Bundle b = mainmenu.getExtras();
-        if(b!=null){
-            VariablesEstaticas.CurrentUserUID =(String) b.get("El UID");
-        }else{
+        if (b != null) {
+            VariablesEstaticas.CurrentUserUID = (String) b.get("El UID");
+        } else {
             Log.e("TEST", "el bundle esta vacio o no lo detecto");
         }
+        //Tener al tanto el documento
+        BaseDeDatos BD = new BaseDeDatos();
+        BD.CrearArchivoCSV();
         Saludos();
     }
 
 
-
-    public void Saludos(){
+    public void Saludos() {
         Database.child(VariablesEstaticas.CurrentUserUID).addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -192,12 +201,12 @@ public class MainMenu extends AppCompatActivity {
                 //if necesario por si ya no obtiene el valor del uid por alguna razon, de esta manera no crasheara
                 //Se necesitan volver a cargar los datos porque cada cambio en la base de datos activa este ondatachange
                 VE.CargarDatos(sharedPreferences);
-                if(VariablesEstaticas.CurrentUserUID != null && !VariablesEstaticas.CurrentUserUID.equals("")) {
-                    Log.e("TEST", "VALOR: "+VariablesEstaticas.CurrentUserUID);
+                if (VariablesEstaticas.CurrentUserUID != null && !VariablesEstaticas.CurrentUserUID.equals("")) {
+                    Log.e("TEST", "VALOR: " + VariablesEstaticas.CurrentUserUID);
                     String bienvenida = dataSnapshot.child("Usuario").getValue().toString();
                     usuarioBienvenidoText.setText("Saludos\n" + bienvenida);
                     //Si el usuario no es administrador
-                    if(dataSnapshot.child("Administrador").getValue().toString().equals("false")){
+                    if (dataSnapshot.child("Administrador").getValue().toString().equals("false")) {
                         rellay_entradas.setAlpha(.5f);
                         rellay_entradas.setClickable(false);
                     }
@@ -235,7 +244,28 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
-    protected void  onStop(){
+    protected void onStop() {
         super.onStop();
+    }
+
+    //Metodo no obligatorio, pero se ejecuta cada vez que se aceptan los permisos
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Toast.makeText(MainMenu.this, "Permission allowed", Toast.LENGTH_SHORT).show();
+                    //Permiso fue aceptado
+                } else {
+                    //El permiso fue denegado
+                    //Toast.makeText(MainMenu.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            //Se puede poner otro case para revisar otros permisos que la app necesite
+        }
     }
 }

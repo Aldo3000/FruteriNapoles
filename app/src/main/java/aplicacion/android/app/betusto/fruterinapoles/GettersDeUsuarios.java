@@ -48,15 +48,15 @@ class GettersDeMerma{
     public String NombreProducto;
     public String FechaDeEntradaDelProducto;
     public String FechaMerma;
-    public String CantidadDelProducto;
+    public String CantidadDelProductoTirado;
 
     public GettersDeMerma(){}
 
-    public GettersDeMerma(String Timestamp, String NombreProducto, String FechaDeEntradaDelProducto, String FechaMerma, String CantidadDelProducto){
+    public GettersDeMerma(String Timestamp, String NombreProducto, String FechaDeEntradaDelProducto, String FechaMerma, String CantidadDelProductoTirado){
         this.Timestamp = Timestamp;
         this.NombreProducto = NombreProducto;
         this.FechaDeEntradaDelProducto = FechaDeEntradaDelProducto;
         this.FechaMerma = FechaMerma;
-        this.CantidadDelProducto = CantidadDelProducto;
+        this.CantidadDelProductoTirado = CantidadDelProductoTirado;
     }
 }

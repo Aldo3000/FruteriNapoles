@@ -39,5 +39,6 @@ dependencies {
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
+    implementation files('libs/opencsv-4.6.jar')
 }
 apply plugin: 'com.google.gms.google-services'

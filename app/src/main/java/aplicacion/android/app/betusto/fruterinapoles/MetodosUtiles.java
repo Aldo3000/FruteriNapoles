@@ -1,5 +1,7 @@
 package aplicacion.android.app.betusto.fruterinapoles;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Service;
@@ -11,8 +13,10 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.InputFilter;
@@ -35,7 +39,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -441,7 +449,9 @@ class BaseDeDatos{
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         //Conseguimos la fecha de la base de datos
+                                        String Nombre = snapshot.child("NombreProducto").getValue().toString();
                                         String Fecha = snapshot.child("FechaEntrada").getValue().toString();
+                                        String Cantidad = snapshot.child("CantidadProducto").getValue().toString();
                                         String fromDate = Fecha;
                                         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                                         Date dtt = null;
@@ -457,76 +467,78 @@ class BaseDeDatos{
                                         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
                                         String formatted = format1.format(calendar.getTime()); //Fecha con los dias añadidos o restados
                                         String fechaActual = format1.format(new Date()); //Fecha actual dd/MM/yyyy
-                                        //Restar fechas
-                                        try {
-                                            Date date1 = format1.parse(formatted);
-                                            Date date2 = format1.parse(fechaActual);
-                                            long diff = date2.getTime() - date1.getTime();
-                                            String timestamp = snapshot.child("Timestamp").getValue().toString();
-                                            Log.e("Test", "Timestamp: "+timestamp+" "+TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-                                            +" Original: "+snapshot.child("GradoMadurezOriginal").getValue().toString() + " Actual: "+
-                                                    snapshot.child("GradoMadurez").getValue().toString());
-                                            switch (snapshot.child("GradoMadurezOriginal").getValue().toString()){
-                                                /*TODO:Crear un "GradoMadurezOriginal" en la base de datos para poder guiar mejor
-                                                * al cambiar valores o eliminar timestamp
-                                                * TODO: Ver eso que dice aldo sobre registrar entradas, que no te deje despues de cierto numero que
-                                                * cuente dentro de la base datos
-                                                * TODO: Este metodo se debe llamar cada 10 segundos, ponerlo en todos los activities
-                                                * TODO: Agregar a este metodo lo relacionado a la merma, incluyendo lo del CSV
-                                                * TODO: El CSV se genera solo si la merma automatica o manual es llamada
-                                                * TODO: Aldo pase salidas ya puesto bonito
-                                                * */
-                                                //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
-                                                case "Green":
-                                                    if(snapshot.child("GradoMadurez").getValue().toString() != null) {
-                                                        if (snapshot.child("GradoMadurez").getValue().toString().equals("Green")) {
-                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 18) {
-                                                                entradas.child(timestamp).child("GradoMadurez").setValue("Yellow");
-                                                            }
-                                                        } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Yellow")) {
-                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 24) {
-                                                                entradas.child(timestamp).child("GradoMadurez").setValue("Red");
-                                                            }
-                                                        } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
-                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 30) {
-                                                                entradas.child(timestamp).removeValue();
-                                                            }
-                                                        }
-                                                    }
-                                                    break;
-                                                //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
-                                                case "Yellow":
-                                                    if(snapshot.child("GradoMadurez").getValue().toString() != null) {
-                                                        if (snapshot.child("GradoMadurez").getValue().toString().equals("Yellow")) {
-                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 6) {
-                                                                entradas.child(timestamp).child("GradoMadurez").setValue("Red");
-                                                            }
-                                                        } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
-                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 12) {
-                                                                entradas.child(timestamp).removeValue();
-                                                            }
-                                                        }
-                                                    }
-                                                    break;
-                                                //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
-                                                case "Red":
-                                                    if(snapshot.child("GradoMadurez").getValue().toString() != null) {
-                                                        //Si los dias de diferencia son mayores a 30 se cambia el grado
-                                                        if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
-                                                            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 6) {
-                                                                entradas.child(timestamp).removeValue();
-                                                            }
-                                                        }
-                                                    }
-                                                    break;
-                                            }
-                                            if(snapshot.child("GradoMadurez").getValue().toString() != null) {
-                                                Log.e("Test", "DESPUES TERMINAR EL SWITCH: Timestamp: " + timestamp + " " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+                                        if(snapshot.child("GradoMadurezOriginal").getValue().toString() != null) {
+                                            //Restar fechas
+                                            try {
+                                                Date date1 = format1.parse(formatted);
+                                                Date date2 = format1.parse(fechaActual);
+                                                long diff = date2.getTime() - date1.getTime();
+                                                String timestamp = snapshot.child("Timestamp").getValue().toString();
+                                                Log.e("Test", "Timestamp: " + timestamp + " " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
                                                         + " Original: " + snapshot.child("GradoMadurezOriginal").getValue().toString() + " Actual: " +
-                                                        snapshot.child("GradoMadurez").getValue().toString()+"\n");
+                                                        snapshot.child("GradoMadurez").getValue().toString());
+                                                switch (snapshot.child("GradoMadurezOriginal").getValue().toString()) {
+                                                    //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
+                                                    case "Green":
+                                                        if (snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                            if (snapshot.child("GradoMadurez").getValue().toString().equals("Green")) {
+                                                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 18) {
+                                                                    entradas.child(timestamp).child("GradoMadurez").setValue("Yellow");
+                                                                }
+                                                            } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Yellow")) {
+                                                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 24) {
+                                                                    entradas.child(timestamp).child("GradoMadurez").setValue("Red");
+                                                                }
+                                                            } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
+                                                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 30) {
+                                                                    //Como se va a retirar el producto se añade como merma automatica
+                                                                    AlAñadirMerma(Nombre, Cantidad, Fecha);
+                                                                    CrearArchivoCSV();
+                                                                    entradas.child(timestamp).removeValue();
+                                                                }
+                                                            }
+                                                        }
+                                                        break;
+                                                    //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
+                                                    case "Yellow":
+                                                        if (snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                            if (snapshot.child("GradoMadurez").getValue().toString().equals("Yellow")) {
+                                                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 6) {
+                                                                    entradas.child(timestamp).child("GradoMadurez").setValue("Red");
+                                                                }
+                                                            } else if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
+                                                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 12) {
+                                                                    //Como se va a retirar el producto se añade como merma automatica
+                                                                    AlAñadirMerma(Nombre, Cantidad, Fecha);
+                                                                    CrearArchivoCSV();
+                                                                    entradas.child(timestamp).removeValue();
+                                                                }
+                                                            }
+                                                        }
+                                                        break;
+                                                    //Dependiendo de los dias  y del color que se tenga actualmente cambiara o se retirara de la BD
+                                                    case "Red":
+                                                        if (snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                            //Si los dias de diferencia son mayores a 30 se cambia el grado
+                                                            if (snapshot.child("GradoMadurez").getValue().toString().equals("Red")) {
+                                                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 6) {
+                                                                    //Como se va a retirar el producto se añade como merma automatica
+                                                                    AlAñadirMerma(Nombre, Cantidad, Fecha);
+                                                                    CrearArchivoCSV();
+                                                                    entradas.child(timestamp).removeValue();
+                                                                }
+                                                            }
+                                                        }
+                                                        break;
+                                                }
+                                                if (snapshot.child("GradoMadurez").getValue().toString() != null) {
+                                                    Log.e("Test", "DESPUES TERMINAR EL SWITCH: Timestamp: " + timestamp + " " + TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+                                                            + " Original: " + snapshot.child("GradoMadurezOriginal").getValue().toString() + " Actual: " +
+                                                            snapshot.child("GradoMadurez").getValue().toString() + "\n");
+                                                }
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
                                             }
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
                                         }
                                     }
                                      @Override
@@ -543,6 +555,77 @@ class BaseDeDatos{
 
             }
         });
+    }
+    CSVWriter writer = null;
+    int cantidadsnaps = 0;
+    public void CrearArchivoCSV(){
+        //Creamos la carpeta
+        File folder = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "FruteriNapoles");
+        boolean success = true;
+        //Si la carpeta no existe se crea
+        if (!folder.exists()) {
+            success = folder.mkdirs();
+        }
+        if (success) {
+            //La carpeta se creó con exito
+        } else {
+            //La carpeta no se pudo crear
+        }
+        String CSV = (folder + File.separator + "Mermas.csv"); // Archivo CSV ubicado dentro de la carpeta
+        // Archivo CSV
+
+        try {
+            writer = new CSVWriter(new FileWriter(CSV));
+            final List<String[]> data = new ArrayList<String[]>();
+            data.add(new String[]{"PRODUCTO TIRADO", "CANTIDAD", "FECHA DE ENTRADA", "FECHA EXACTA DEL RETIRO"});
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+            //Referencia a la tabla del child:
+            final DatabaseReference mermas = database.child("Mermas");
+            mermas.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    final int CantidadTotalDeSnaps = (int) dataSnapshot.getChildrenCount();
+                    for (final DataSnapshot snapshot : dataSnapshot.getChildren()) //Recorremos cada campo de la tabla Entradas
+                    {
+                        if (snapshot.getValue() != null) {
+                            mermas.child(snapshot.getKey()).child("CantidadDelProductoTirado").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    //Añadimos cada apartado a las celdas
+                                    cantidadsnaps++;
+                                    String ProductoTirado = snapshot.child("NombreProducto").getValue().toString();
+                                    String Cantidad = snapshot.child("CantidadDelProductoTirado").getValue().toString();
+                                    String FechaEntrada = snapshot.child("FechaDeEntradaDelProducto").getValue().toString();
+                                    String FechaExactaRetiro = snapshot.child("FechaMerma").getValue().toString();
+                                    data.add(new String[]{ProductoTirado, Cantidad, FechaEntrada, FechaExactaRetiro});
+                                    if(cantidadsnaps == CantidadTotalDeSnaps) {
+                                        writer.writeAll(data); //Añadimos el data al csv y cerramos el writer
+                                        try {
+                                            writer.close();
+                                            cantidadsnaps = 0;
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            }
+                            );
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //Variables para revisar la merma y grados de madurez
